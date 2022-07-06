@@ -18,20 +18,21 @@ library(MSstats)
 #since I want to make sure later on in the code that the protein was found in at least
 #rep-1 samples. 
 
-run <- "20220606"
-organism <- "synechocystis"
-searchmode <- "pcc6803"
+run <- "20220617"
+organism <- "arabidopsis"
+searchmode <- "chloroplast"
 rep <- 4
 tot_rep <- 8
 remove_samp <- c()
 
+#platelayout: if it reads all columns as one, change to csv2
 platelayout <- read_csv(file = paste("plate/", organism, "/plate_layout_", organism, "_", run, ".csv", sep = ""))
 prot <- read_tsv(paste("rawdata/", organism, "/quant_report_", organism, "_",
                       searchmode, "_", run, ".elib.proteins.txt", sep = ""))
 pep <- read_tsv(paste("rawdata/", organism, "/quant_report_", organism, "_",
                       searchmode, "_", run, ".elib.peptides.txt", sep = ""))
 protein_properties <- read_csv2(paste("uniprot/", organism, "/", organism, ".csv", sep = "")) %>%
-  select('Entry', 'Gene names  (primary )', 'Protein names')
+  select('Entry', 'Gene names  (primary )', 'Protein names', 'Gene names  (ordered locus )')
 
 #Check for outliers by comparing peptide intensity distribution between replicates
 pep <- pep %>%
@@ -81,7 +82,7 @@ write_csv(amb_annot, paste("annotations/", organism, "/amb_annot_", searchmode, 
 #Keep one protein if ambiguous (=peptides can be annotated to several different proteins). 
 #ADD REMAINING POSSIBILITIES IN LATER STEP IN JAN'S CODE
 prot <- prot %>%
-  group_by(Name) %>%
+  group_by(Name, Treatm) %>%
   filter(!duplicated(PeptideSequences)|n()==1)
 
 #Filter proteins that have 0 in intensity and missing in more than one sample. 
