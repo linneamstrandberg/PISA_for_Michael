@@ -18,9 +18,9 @@ library(MSstats)
 #since I want to make sure later on in the code that the protein was found in at least
 #rep-1 samples. 
 
-run <- "20220617"
-organism <- "arabidopsis"
-searchmode <- "chloroplast"
+run <- "20220606"
+organism <- "synechocystis"
+searchmode <- "pcc6803"
 rep <- 4
 tot_rep <- 8
 remove_samp <- c()
@@ -32,7 +32,7 @@ prot <- read_tsv(paste("rawdata/", organism, "/quant_report_", organism, "_",
 pep <- read_tsv(paste("rawdata/", organism, "/quant_report_", organism, "_",
                       searchmode, "_", run, ".elib.peptides.txt", sep = ""))
 protein_properties <- read_csv2(paste("uniprot/", organism, "/", organism, ".csv", sep = "")) %>%
-  select('Entry', 'Gene names  (primary )', 'Protein names', 'Gene names  (ordered locus )')
+  select('Entry', 'Gene names  (primary )', 'Protein names')
 
 #Check for outliers by comparing peptide intensity distribution between replicates
 pep <- pep %>%
